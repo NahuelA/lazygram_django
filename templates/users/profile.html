@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block title %}
+        <title>{{data_profile}} profile| Copygram</title>
+    {% endblock %}
+</head>
+<body>
+    
+    {% block container_main %}
+        <main>
+
+            <div class="w-100 p-3">
+                <div class="profile-img">
+                    <img src="" alt="{{data_profile}}">
+                    <h2>{{data_profile}}</h2>
+                </div>
+                <div class="">
+
+                    <div class="fw-normal"><h6>Biography: {{data_profile.biography}}</h6></div>
+                    <div class="fw-normal"><h6>Website: {{data_profile.website}}</h6></div>
+                </div>
+                <div>
+
+                    <div class="fw-normal"><h6>Phone number: {{data_profile.phone_number}}</h6></div>
+                    <div class="fw-normal"><h6>Date of birth: {{data_profile.date_of_birth}}</h6></div>
+                </div>
+                <div class="fw-normal"><h6>Last modified: {{data_profile.modified}}</h6></div>
+            </div>
+            <div class="w-100 p-3"></div>
+        </main>
+    {% endblock %}
+</body>
+</html>

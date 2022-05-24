@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block others_styles %}
+    <link rel="stylesheet" href="{% static 'css/posts/home.css' %}">
+    {% endblock %}
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!-- All sections -->
+    {% block container_main %}
+
+    <section class="posts-section">
+
+        {% for i in profiles.items %}
+
+        <div class="post">
+            <div class="container-picture">
+                <img class="img-profile" src="{{i.1.picture}}" alt="">
+                <div class="container-last-modified-title">
+                    <h5 class="title-profile">{{i.1.name}}</h5>
+                    <p class="last-modified">{{i.1.last_modified}}</p>
+                </div>
+            </div>
+            <div class="container-post">
+                <img class="post-picture" src="{{i.1.picture}}" alt="">
+                <p class="post-description">{{i.1.description}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+    {% endblock %}
+</body>
+
+</html>

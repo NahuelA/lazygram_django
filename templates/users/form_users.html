@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+        <title>Sign-up User | Copygram</title>
+    {% endblock %}
+</head>
+<body>
+    
+    {% block header %}
+    {% endblock %}
+    
+    {% block container_main %}
+        <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {% for i in error %}
+                        {{i}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="mx-auto" style="width: 80%;">
+                
+                <h2 class="h2">Username and password</h2>
+                <div class="form-control mb-2">
+                    
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_username" class="form-label">Username:</label>
+                        {{form_user.username}}
+                    </div>
+                    
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_password" class="form-label">Password:</label>
+                        {{form_user.password}}
+                    </div>
+
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_email" class="form-label">Email:</label>
+                        {{form_user.email}}
+                    </div>
+
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_auth_pass" class="form-label">Password confirmation:</label>
+                        
+                        <input type="password" name="password-confirmation" required="" placeholder="Password confirmation" class="form-control" maxlength="128" id="id_password_confirmation">
+                    </div>
+
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_first_name" class="form-label">First name:</label>
+                        {{form_user.first_name}}
+                    </div>
+
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_last_name" class="form-label">Last name:</label>
+                        {{form_user.last_name}}
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 col-sm-8 mx-auto mb-2">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+                </div>
+            </div>
+        </form>
+    {% endblock %}
+</body>
+</html>

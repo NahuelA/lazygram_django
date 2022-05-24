@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+        <title>Sign-up profile | Copygram</title>
+    {% endblock %}
+</head>
+<body>
+    
+    {% block header %}
+    {% endblock %}
+
+    {% block container_main %}
+        <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {% for i in error %}
+                        {{i}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="mx-auto" style="width: 80%;">
+                
+                <h2 class="h2">Additional information to profile</h2>
+                <div class="form-control">
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_biography" class="form-label">Biography:</label>
+                        {{form_profile.biography}}
+                    </div>
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_picture" class="form-label">Picture:</label>
+                        {{form_profile.picture}}
+                    </div>
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_date_of_birth" class="form-label">Date of birth:</label>
+                        {{form_profile.date_of_birth}}
+                    </div>
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_website" class="form-label">Website:</label>
+                        {{form_profile.website}}
+                    </div>
+                    <div class="mb-3 col-sm-8 mx-auto">
+                        <label for="id_phone_number" class="form-label">Phone number:</label>
+                        {{form_profile.phone_number}}
+                    </div>
+
+                    <div class="d-grid gap-2 col-sm-8 mx-auto mb-2">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endblock %}
+</body>
+</html>

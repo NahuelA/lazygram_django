@@ -1,0 +1,91 @@
+/* Stylesheet for all files */
+
+* {
+
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+    font-family: 'Roboto', sans-serif;
+    /* Environment variables */
+    --color-one: #191e3a;
+}
+
+
+/**********/
+/* Header */
+/**********/
+
+.container-header {
+
+    width: 100%;
+    min-height: 80px;
+}
+
+.menu {
+
+    display: grid;
+    grid-template-columns: 20% 80%;
+    justify-content: center;
+}
+
+.logo a {
+
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: flex-start;
+    text-decoration: none;
+
+    padding: 5px;
+    color: #000;
+}
+
+.logo a:hover{
+
+    color: rgb(38, 36, 36);
+}
+
+.logo h1 {
+
+    margin: auto 5px;
+}
+
+.logo img {
+
+    width: 50px;
+    height: 50px;
+}
+
+.items-menu-ul {
+
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: flex-end;
+}
+
+.linkf-menu {
+
+    display: grid;
+    align-items: center;
+    width: 100%;
+
+    padding: 8px;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.itemf-menu {
+
+    list-style: none;
+}
+
+.itemf-menu img{
+    
+    width: 30px;
+    height: 30px;
+}

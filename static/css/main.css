@@ -1,0 +1,59 @@
+/* Stylesheet for all files */
+
+*{
+
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root{
+
+    /* Environment variables */
+    --color-one: #fff;
+}
+
+  /**********/
+ /* Header */
+/**********/
+
+.container-header{
+
+    width: 100%;
+    min-height: 80px;
+}
+
+.menu{
+
+    display: grid;
+    grid-template-columns: 10% 90%;
+    justify-content: center;
+}
+
+.items-menu-ul{
+
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+    
+    background-color: aqua;
+}
+
+.linkf-menu{
+    
+    display: block;
+    width: 100%;
+
+    text-decoration: none;
+    font-size: 20px;
+    padding: 8px;
+
+    background-color: red;
+    color: var(--color-one);
+}
+
+.itemf-menu{
+    
+    list-style: none;
+}
