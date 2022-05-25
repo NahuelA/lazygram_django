@@ -17,6 +17,7 @@
     {% endblock %}
 
     {% block container_main %}
+        {{s.1}}
         <form method="post" enctype="multipart/form-data"> {% csrf_token %}
             {% if error %}
                 <div class="alert alert-danger" role="alert">

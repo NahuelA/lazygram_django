@@ -38,10 +38,14 @@
                             {{form.username}}
                             <label for="id_password">Password</label>
                             {{form.password}}
-
-                            <div class="d-grid gap-2 col-9 mx-auto my-2">
+                            
+                            <div class="d-grid gap-2 col-12 my-2">
                                 <button type="submit" class="btn btn-primary btn-lg">Login</button>
                             </div>
+                            <div class="mx-auto">
+                                <a href="{% url 'sign-up' %}">Don't have an account? register now!</a>
+                            </div>
+                            {# Validations #}
                             {% if msg_error1 is None %}
                                 <p class="error">{{msg_error.0}}</p>
                             {% endif %}
