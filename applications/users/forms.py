@@ -94,7 +94,6 @@ class FormProfile(ModelForm):
             'website':TextInput(attrs={'placeholder':'Website',
                                        'required':False,
                                        'class':'form-control',
-                                    #    'value': if ModelForm.errors else '',
                                     }),
 
             'phone_number':NumberInput(attrs={'min':0,

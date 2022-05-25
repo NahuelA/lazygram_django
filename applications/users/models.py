@@ -31,6 +31,13 @@ class Profile(models.Model):
     # For display string in records from admin
     def __str__(self):
         return '%sf %sf' % (self.user, self.created)
+    
+    def exist_profile(self, value_filter):
+        """return true if the user is in options, false if not"""
+        if self.objects.filter(user=value_filter).exists():
+            return True
+        else:
+            return False
 
     class Meta:
         verbose_name_plural = 'Profiles'

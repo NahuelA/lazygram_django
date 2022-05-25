@@ -3,6 +3,7 @@
 """ DJANGO_APPS """
 # HttpResponse
 import json
+import profile
 from xml.dom import VALIDATION_ERR
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -50,7 +51,6 @@ from applications.users.forms import (
 from applications.users.models import Profile
 from django.contrib.auth.models import User
 
-
 # Login function
 def login_view(request, **kwargs):
     """ Login with any account """
@@ -61,11 +61,11 @@ def login_view(request, **kwargs):
     form_class = FormUser
 
     if request.method == 'GET':
+        # Render template from login
         return render(request, template_name, context={'form':form_class})
-    # If user exist, login
     try:
         if request.method == 'POST':
-
+            # Get post
             username = request.POST['username']
             password = request.POST['password']
 
@@ -85,7 +85,7 @@ def login_view(request, **kwargs):
                                 context={'form':form_class,
                                         'msg_error':[permission_denied_message, auth]}
                             )
-    except Exception as err:
+    except Exception as err: # Fix Exception
         return err
 
 # Logout function
@@ -109,7 +109,7 @@ class UserSignUpView(CreateView):
     # Only in this view v:
     # I have no idea WHY xd
     # Because use reverse_lazy in success_url var
-    success_url = reverse_lazy('profile-up') 
+    success_url = reverse_lazy('profile-sign-up') 
     template_name = 'users/form_users.html'
 
     def get_context_data(self, **kwargs):
@@ -211,19 +211,13 @@ class ProfileSignUpView(LoginRequiredMixin, CreateView):
             # User for OneToOneField
             user = User.objects.get(username=str(request.user))
             # Get info to profile inputs
-            biography = request.POST.get('biography')
-            picture = request.POST.get('picture')
-            date_of_birth = request.POST.get('date_of_birth')
-            website = request.POST.get('website')
-            phone_number = request.POST.get('phone_number')
-            
             data_profile = {
                     'user':user,
-                    'biography':biography,
-                    'picture':picture,
-                    'date_of_birth':date_of_birth,
-                    'website':website,
-                    'phone_number':phone_number,
+                    'biography':    request.POST.get('biography'),
+                    'picture':      request.POST.get('picture'),
+                    'date_of_birth':request.POST.get('date_of_birth'),
+                    'website':      request.POST.get('website'),
+                    'phone_number': request.POST.get('phone_number'),
                     }
 
             # Adding post data in form class and saving in form_profile variable
@@ -231,8 +225,7 @@ class ProfileSignUpView(LoginRequiredMixin, CreateView):
             if form_profile.is_valid():
                 # Create profile for user
                 form_profile.save()
-                profile_user = Profile.objects.get(user=user)
-                return render(request, self.template_redirect, context={'data_profile':profile_user})
+                return HttpResponseRedirect(redirect_to=self.success_url)
             else:
                 # Invalid save profile
                 errors = list(form_profile._errors.values()) # Errors handled by django.forms.utils
@@ -242,7 +235,7 @@ class ProfileSignUpView(LoginRequiredMixin, CreateView):
         return super().post(request, **kwargs)
 
 
-class ProfileUpdateView(UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """ Update profile from user
     
         Some fields is updates automatically:
@@ -251,12 +244,41 @@ class ProfileUpdateView(UpdateView):
             - modified
             - is_active
     """
+    # Login required
+    login_url = 'login'
+    redirect_field_name = 'login'
+
     model = Profile
     template_name = 'users/profile_edit.html'
     form_class = FormProfile
     # success_url
 
-class ProfileView(ListView):
+class ProfileView(LoginRequiredMixin,ListView):
     """ List the information profile """
+    # Login required
+    login_url = 'sign-up'
+    redirect_field_name = 'sign-up'
+
     model = Profile
     template_name = 'users/profile.html'
+
+    def get(self, request, **kwargs):
+        """ Display data for the authenticated user """
+        context = {}
+        try:
+            # If user contains a profile
+            if Profile.exist_profile(self.model, request.user):
+                context['data_profile'] = self.model.objects.get(user=request.user)
+                context['data_user'] = User.objects.get(username=request.user)
+                return render(request,
+                              self.template_name,
+                              context)
+            else:
+                return render(request,
+                              template_name=self.template_name,
+                              context={'error':'Does not exist profile'})
+        except Exception as exc:
+            # Fix and handled error
+            return render(request,
+                          self.template_name,
+                          context={'exception':exc})
