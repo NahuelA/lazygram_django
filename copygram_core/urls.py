@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Local apps
-    path('copygram/posts/',include('applications.posts.urls')),
-    path('copygram/users/',include('applications.users.urls')),
+    path('',include(('applications.posts.urls', 'posts'),namespace='posts')),
+    path('users/',include(('applications.users.urls','users'), namespace='users')),
     
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
