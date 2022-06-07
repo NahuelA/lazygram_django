@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    
+    {% block container_main %}
+        {% if does_not_profile %}
+            <div class="alert alert-danger" role="alert">
+                {{does_not_profile}} <a href="{% url 'users:user-create' %}">Do you want to create profile?</a>
+            </div>
+        {% else %}
+            <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for i in error %}
+                            {{i}}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="mx-auto" style="width: 50%;">
+                    
+                    <h2 class="h2">Edit {{user}} profile</h2>
+                    <div class="form-control">
+                        <div class="mb-2 col-sm-8 mx-auto">
+                            <label for="id_biography" class="form-label">Biography:</label>
+                            {{form.biography}}
+                        </div>
+                        <div class="mb-2 col-sm-8 mx-auto">
+                            <label for="id_picture" class="form-label">Picture:</label>
+                            {{form.picture}}
+                        </div>
+                        <div class="mb-2 col-sm-8 mx-auto">
+                            <label for="id_date_of_birth" class="form-label">Date of birth:</label>
+                            {{form.date_of_birth}}
+                        </div>
+                        <div class="mb-2 col-sm-8 mx-auto">
+                            <label for="id_website" class="form-label">Website:</label>
+                            {{form.website}}
+                        </div>
+                        <div class="mb-2 col-sm-8 mx-auto">
+                            <label for="id_phone_number" class="form-label">Phone number:</label>
+                            {{form.phone_number}}
+                        </div>
+
+                        <div class="d-grid gap-2 col-sm-8 mx-auto mb-2">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

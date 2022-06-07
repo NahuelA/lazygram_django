@@ -17,7 +17,6 @@
     {% endblock %}
 
     {% block container_main %}
-        {{s.1}}
         <form method="post" enctype="multipart/form-data"> {% csrf_token %}
             {% if error %}
                 <div class="alert alert-danger" role="alert">
@@ -26,29 +25,29 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <div class="mx-auto" style="width: 80%;">
+            <div class="mx-auto mt-4" style="width: 50%;">
                 
                 <h2 class="h2">Additional information to profile</h2>
                 <div class="form-control">
-                    <div class="mb-3 col-sm-8 mx-auto">
+                    <div class="mb-2 col-sm-8 mx-auto">
                         <label for="id_biography" class="form-label">Biography:</label>
-                        {{form_profile.biography}}
+                        {{form.biography}}
                     </div>
-                    <div class="mb-3 col-sm-8 mx-auto">
+                    <div class="mb-2 col-sm-8 mx-auto">
                         <label for="id_picture" class="form-label">Picture:</label>
-                        {{form_profile.picture}}
+                        {{form.picture}}
                     </div>
-                    <div class="mb-3 col-sm-8 mx-auto">
+                    <div class="mb-2 col-sm-8 mx-auto">
                         <label for="id_date_of_birth" class="form-label">Date of birth:</label>
-                        {{form_profile.date_of_birth}}
+                        {{form.date_of_birth}}
                     </div>
-                    <div class="mb-3 col-sm-8 mx-auto">
+                    <div class="mb-2 col-sm-8 mx-auto">
                         <label for="id_website" class="form-label">Website:</label>
-                        {{form_profile.website}}
+                        {{form.website}}
                     </div>
-                    <div class="mb-3 col-sm-8 mx-auto">
+                    <div class="mb-2 col-sm-8 mx-auto">
                         <label for="id_phone_number" class="form-label">Phone number:</label>
-                        {{form_profile.phone_number}}
+                        {{form.phone_number}}
                     </div>
 
                     <div class="d-grid gap-2 col-sm-8 mx-auto mb-2">

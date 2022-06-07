@@ -23,7 +23,6 @@
 .container-header {
 
     width: 100%;
-    min-height: 80px;
 }
 
 .menu {
@@ -86,6 +85,6 @@
 
 .itemf-menu img{
     
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
 }

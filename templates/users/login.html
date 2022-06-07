@@ -43,7 +43,7 @@
                                 <button type="submit" class="btn btn-primary btn-lg">Login</button>
                             </div>
                             <div class="mx-auto">
-                                <a href="{% url 'sign-up' %}">Don't have an account? register now!</a>
+                                <a href="{% url 'users:user-create' %}">Don't have an account? register now!</a>
                             </div>
                             {# Validations #}
                             {% if msg_error1 is None %}

@@ -26,16 +26,56 @@
     <header class="container-header">
             <nav class="menu">
                 <div class="logo">
-                    <a href="{% url 'home' %}">
+                    <a href="{% url 'posts:home' %}">
                         <img src="{% static 'imgs/logo_instagram.png' %}" alt="copygram_logo">
                         <h1>Copygram</h1>
                     </a>
                 </div>
                 <ul class="items-menu-ul">
-                    <a href="{% url 'home' %}" class="linkf-menu"><li class="itemf-menu"><img src="{% static 'imgs/house-solid.svg' %}" alt=""></li></a>
-                    <a href="{% url 'profile' %}" class="linkf-menu"><li class="itemf-menu"><img src="{% static 'imgs/user-solid.svg' %}" alt=""></li></a>
-                    <a href="#" class="linkf-menu"><li class="itemf-menu"><img src="{% static 'imgs/inbox-solid.svg' %}" alt=""></li></a>
-                    <a href="{% url 'logout' %}" class="linkf-menu"><li class="itemf-menu"><img src="{% static 'imgs/right-from-bracket-solid.svg' %}" alt=""></li></a>
+                    <a href="{% url 'posts:home' %}"
+                       class="linkf-menu">
+                        <li class="itemf-menu">
+                            <img src="{% static 'imgs/house-solid.svg' %}"
+                                 class="rounded-circle"
+                                 alt="home">
+                        <li>
+                    </a>
+                    {% if profile.picture %}
+                        <a href="{% url 'users:profile-view' %}"
+                        class="linkf-menu">
+                            <li class="itemf-menu">
+                                <img src="{{profile.picture.url}}"
+                                    alt="{{picture.user}}"
+                                    class="rounded-circle"
+                                    style="object-fit:cover;">
+                            </li>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:profile-view' %}"
+                           class="linkf-menu">
+                           <li class="itemf-menu">
+                               <img src="{% static 'imgs/user-solid.svg' %}"
+                                    class="rounded-circle"
+                                    alt="user">
+                            </li>
+                        </a>
+                    {% endif %}
+                    <a href="#"
+                       class="linkf-menu">
+                       <li class="itemf-menu">
+                           <img src="{% static 'imgs/inbox-solid.svg' %}"
+                                class="rounded-circle"
+                                alt="">
+                            </li>
+                    </a>
+                    <a href="{% url 'users:logout' %}"
+                       class="linkf-menu">
+                       <li class="itemf-menu">
+                           <img src="{% static 'imgs/right-from-bracket-solid.svg' %}"  
+                                class="rounded-circle"
+                                alt="right-from-bracket-solid">
+                        </li>
+                    </a>
                     <!-- <a href="#" class="linkf-menu"><li class="itemf-menu "><img src="{% static 'imgs/right-from-bracket-solid.svg' %}" alt=""></li></a> -->
                 </ul>
             </nav>
