@@ -21,9 +21,11 @@ class Profile(models.Model):
     picture = models.ImageField(upload_to='uploads/users_profile', null=True, blank=True)
     date_of_birth = models.DateTimeField()
     website = models.URLField(max_length=200, null=True, blank=True)
-    phone_number = models.IntegerField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True, editable=True)
-    
+    # posts_count = models.IntegerField(blank=True, null=True, editable=True)
+    # followers = models.IntegerField(blank=True, null=True, editable=True)
+    # following = models.IntegerField(blank=True, null=True, editable=True)
     # Created and modified any from profile
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -32,13 +34,22 @@ class Profile(models.Model):
     def __str__(self):
         return '%sf %sf' % (self.user, self.created)
     
-    def exist_profile(self, value_filter):
-        """return true if the user is in options, false if not"""
-        if self.objects.filter(user=value_filter).exists():
+    # Validations
+    def exist_profile(self, username):
+        """return true if the user is in Profile, false if not"""
+        if self.objects.filter(user=username).exists():
             return True
         else:
             return False
 
+    # FIX
+    # # Validate kw and user for update
+    # def validate_pk(self, user, pk):
+    #     """ Return true if exist any match """
+    #     if self.objects.filter(user=user, id=pk).exists():
+    #         return True
+    #     else:
+    #         return False
     class Meta:
         verbose_name_plural = 'Profiles'
 

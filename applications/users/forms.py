@@ -1,5 +1,4 @@
 """ Form to users login and edit profile """
-from django.core.mail import send_mail
 from django.forms import (
 
     # Main class
@@ -16,6 +15,7 @@ from django.forms import (
 
 # Validation
 from django.core.exceptions import ValidationError
+# from django.core.validators
 
 # Models
 from .models import Profile
@@ -56,17 +56,19 @@ class FormUser(ModelForm):
                                        'class':'form-control'}),
     }
 
-    # def send_email_verification(self, email):
-
-    #     msg_email = 'Hi! Welcome to Copygram :D'
-    #     subject = 'Successful registration!'
-    #     # Send to mail if email exist
+    def clean_unique_user(self):
+        
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError('Username is already in use', code='username_invalid')
+        else:
+            return False
 
         
 class FormProfile(ModelForm):
     class Meta:
         model   = Profile
-        exclude = ['created','modified', 'age']
+        exclude = ['created','modified', 'age', 'user']
         widgets = {
             'biography':Textarea(attrs={'cols':10, 'rows':5,
                                         'required':False,
@@ -101,3 +103,4 @@ class FormProfile(ModelForm):
                                               'placeholder':'Phone number',
                                               'class':'form-control',}),
     }
+    

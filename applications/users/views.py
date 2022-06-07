@@ -2,10 +2,11 @@
 
 """ DJANGO_APPS """
 # HttpResponse
-import json
-import profile
-from xml.dom import VALIDATION_ERR
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import (
+    
+    render,
+    HttpResponseRedirect,
+)
 from django.urls import reverse, reverse_lazy
 
 # Generics edit
@@ -33,9 +34,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib.auth.admin CHANGE PASSWORD
 # from django.contrib.auth.hashers
 
-# Exceptions
-from django.db.utils import IntegrityError
-
 # Forms
 from applications.users.forms import (
 
@@ -51,53 +49,52 @@ from applications.users.forms import (
 from applications.users.models import Profile
 from django.contrib.auth.models import User
 
-# Login function
+
+# Login account
 def login_view(request, **kwargs):
     """ Login with any account """
 
     template_name = 'users/login.html'
-    success_url = reverse('home')
+    success_url = reverse('posts:home')
     permission_denied_message = 'Invalid account'
     form_class = FormUser
 
     if request.method == 'GET':
         # Render template from login
         return render(request, template_name, context={'form':form_class})
-    try:
-        if request.method == 'POST':
-            # Get post
-            username = request.POST['username']
-            password = request.POST['password']
+    if request.method == 'POST':
+        # Get post
+        username = request.POST['username']
+        password = request.POST['password']
 
-            # Auth
-            auth = authenticate(request, username=username, password=password)
+        # Auth
+        auth = authenticate(request, username=username, password=password)
 
-            # If user not found, user = None
-            if auth != None:
+        # If user not found, user = None
+        if auth != None:
 
-                # Login and redirect
-                login(request, auth)
-                return HttpResponseRedirect(redirect_to=success_url)
+            # Login and redirect
+            login(request, auth)
+            return HttpResponseRedirect(redirect_to=success_url)
 
-            else:
-                # If user is not found
-                return render (request, template_name,
-                                context={'form':form_class,
-                                        'msg_error':[permission_denied_message, auth]}
+        else:
+            # If user is not found
+            return render (request, template_name,
+                            context={
+                                    'form':form_class,
+                                    'msg_error':[permission_denied_message, auth]
+                                    }
                             )
-    except Exception as err: # Fix Exception
-        return err
 
-# Logout function
+# Logout account
 @login_required(login_url='login')
-def logout_view(request, **kwargs):
+def logout_view(request):
     """ Logout from account """
-
-    success_url = reverse('login')
+    success_url = reverse('users:login')
     logout(request)
     return HttpResponseRedirect(success_url)
 
-# Create and View
+# Create new user
 class UserSignUpView(CreateView):
     """ Sign-up user from Copygram """
 
@@ -109,14 +106,12 @@ class UserSignUpView(CreateView):
     # Only in this view v:
     # I have no idea WHY xd
     # Because use reverse_lazy in success_url var
-    success_url = reverse_lazy('profile-sign-up') 
-    template_name = 'users/form_users.html'
+    success_url = reverse_lazy('users:profile-create') 
+    template_name = 'users/users_create.html'
 
     def get_context_data(self, **kwargs):
-        """ Return form and all context """
-
+        """ Return form to sign-up user """
         context = super().get_context_data(**kwargs)
-        # Form sign-up user
         context['form_user'] = self.form_class
         return context
         
@@ -124,118 +119,122 @@ class UserSignUpView(CreateView):
 
         if request.method == 'POST':
 
-            # Get info to User inputs
-            username = request.POST['username']
-            password = request.POST['password']
-            pass_confirmation = request.POST.get('password-confirmation')
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            email = request.POST.get('email')
+            # Validate a password confirmation match
+            # Push request post into variable
+            form_user = self.form_class(request.POST)
+            password_confirmation = request.POST.get('password-confirmation')
+            password = request.POST.get('password')
 
-            if pass_confirmation == password:
-                
-                # If the username found, not create user
-                auth = authenticate(request, username=username, password=password)
-                data_user ={
-                      'username':username,
-                      'password':password,
-                      'email':email,
-                      'first_name':first_name,
-                      'last_name':last_name
-                    }
-
-                form_user = self.form_class(data_user)
-
-                if auth == None:
-                    if form_user.is_valid():
-                        # Sign-up user!
-                        User.objects.create_user(form_user['username'].value(),
-                                                 form_user['email'].value(),
-                                                 form_user['password'].value(),
-                                                 first_name=form_user['first_name'].value(),
-                                                 last_name=form_user['last_name'].value(),
-                                                )
-                        # Login now
-                        auth = authenticate(request,
-                                            username=form_user['username'].value(),
-                                            password=form_user['password'].value()
-                                        )
-                        if auth != None:
-                            login(request,auth)
-                            return HttpResponseRedirect(redirect_to=self.success_url)
-                    else:
-                        # Invalid save user
-                        errors = list(form_user._errors.values()) # Exception handling to django.forms.utils
-                        return render(request, self.template_name,
-                                        context={'error':errors,
-                                                 'form_user':self.form_class,
-                                                })
+            if form_user.is_valid():
+                # Validate if username is already taken
+                if self.form_class.clean_unique_user(form_user):
+                    pass
                 else:
-                    # Error username invalid
-                    return render(request, self.template_name,
-                                        context={'error':'This name is already use in or email invalid',
-                                                 'form_user':self.form_class,
-                                                })
+                    # Validate if password == password-confirmation
+                    if password == password_confirmation:
+                        User.objects.create_user(
+                                                form_user['username'].value(),
+                                                form_user['email'].value(),
+                                                form_user['password'].value(),
+                                                first_name=form_user['first_name'].value(),
+                                                last_name=form_user['last_name'].value(),
+                                                )
+                        # Login now and return the profile sign-up
+                        auth = authenticate(
+                                        request,
+                                        username=form_user['username'].value(),
+                                        password=form_user['password'].value(),
+                                        )
+
+                        login(request,auth)
+                        return HttpResponseRedirect(redirect_to=self.success_url)
+                    else:
+                        # Invalid password confirmation
+                        return render(request,
+                                      self.template_name,
+                                      context={
+                                               'invalid_pass':'Invalid confirmation password',
+                                               'form_user':self.form_class,
+                                            })
             else:
-                # Error password auth invalid
+                # Invalid save user
+                errors = list(form_user._errors.values()) # Exception handling to django.forms.utils
                 return render(request, self.template_name,
-                                        context={'error':'Password authentication invalid',
-                                                 'form_user':self.form_class,
-                                                })
+                              context={
+                                       'error':errors,
+                                       'form_user':self.form_class,
+                                      })
+
         return super().post(request, **kwargs)
 
-
+# Create profile
 class ProfileSignUpView(LoginRequiredMixin, CreateView):
     """ Sign-up profile from Copygram """
     # Login required
-    login_url = 'login'
-    redirect_field_name = 'login'
+    login_url = 'users:login'
+    redirect_field_name = 'users:login'
 
     model = Profile
     form_class = FormProfile
-    success_url = reverse_lazy('profile') 
-    template_name = 'users/form_profile.html'
-    template_redirect = 'users/profile.html'
+    success_url = reverse_lazy('users:profile-view') 
+    template_name = 'users/profile_create.html'
+    template_redirect = 'users/profile_view.html'
 
-    def get_context_data(self, **kwargs):
-        """ Return form and all context """
-        context = super().get_context_data(**kwargs)
-        # Form sign-up Profile
-        context['form_profile'] = self.form_class
-        return context
-    
     def post(self, request, **kwargs):
-        """ Create profile information from newly created user """
-        if request.method == 'POST':
+        """ Create profile from newly created user """
+        # Adding post data in form class and saving in form_profile variable
+        user = User.objects.filter(id=int(request.user.id)).first()
+        form_profile = self.form_class(request.POST)
+        if form_profile.is_valid():
+            # Create profile to user
+            Profile.objects.create(
+                user = user,
+                biography = request.POST.get('biography'),
+                picture = request.FILES.get('picture'),
+                date_of_birth = request.POST.get('date_of_birth'),
+                website = request.POST.get('website'),
+                phone_number = request.POST.get('phone_number'),
+            )
+            return HttpResponseRedirect(redirect_to=self.success_url)
+        else:
+            # Invalid save profile
+            errors = list(form_profile._errors.values()) # Errors handled by django.forms.utils
+            return render(request, self.template_name,
+                            context={'error':errors,
+                                    'form':self.form_class})
 
-            # User for OneToOneField
-            user = User.objects.get(username=str(request.user))
-            # Get info to profile inputs
-            data_profile = {
-                    'user':user,
-                    'biography':    request.POST.get('biography'),
-                    'picture':      request.POST.get('picture'),
-                    'date_of_birth':request.POST.get('date_of_birth'),
-                    'website':      request.POST.get('website'),
-                    'phone_number': request.POST.get('phone_number'),
-                    }
+# Read profiles
+class ProfileView(LoginRequiredMixin,ListView):
+    """ List the information profile """
+    # Login required
+    login_url = 'users:login'
+    redirect_field_name = 'users:login'
 
-            # Adding post data in form class and saving in form_profile variable
-            form_profile = self.form_class(data_profile)
-            if form_profile.is_valid():
-                # Create profile for user
-                form_profile.save()
-                return HttpResponseRedirect(redirect_to=self.success_url)
-            else:
-                # Invalid save profile
-                errors = list(form_profile._errors.values()) # Errors handled by django.forms.utils
-                return render(request, self.template_name,
-                                context={'error':errors,
-                                         'form_profile':self.form_class})
-        return super().post(request, **kwargs)
+    model = Profile
+    template_name = 'users/profile_view.html'
 
+    def get(self, request, **kwargs):
+        """ Display data for the authenticated user """
+        context = {}
+        # If user contains a profile
+        profile_exist = Profile.exist_profile(self.model, request.user)
+        if profile_exist:
+            context['profile'] = self.model.objects.get(user=request.user)
+            return render(request,
+                            self.template_name,
+                            context
+                        )
+        else:
+            return render(request,
+                            template_name=self.template_name,
+                            context=
+                                {
+                                'does_not_profile':'Does not exist profile',
+                                }
+                        )
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+# Update profile
+class ProfileUpdateView( UpdateView):
     """ Update profile from user
     
         Some fields is updates automatically:
@@ -244,41 +243,38 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             - modified
             - is_active
     """
-    # Login required
-    login_url = 'login'
-    redirect_field_name = 'login'
+    # login required
+    login_url = 'users:login'
+    redirect_field_name = 'users:login'
 
     model = Profile
-    template_name = 'users/profile_edit.html'
+    template_name = 'users/profile_update.html'
     form_class = FormProfile
-    # success_url
-
-class ProfileView(LoginRequiredMixin,ListView):
-    """ List the information profile """
-    # Login required
-    login_url = 'sign-up'
-    redirect_field_name = 'sign-up'
-
-    model = Profile
-    template_name = 'users/profile.html'
+    success_url = reverse_lazy('users:profile-view')
 
     def get(self, request, **kwargs):
-        """ Display data for the authenticated user """
-        context = {}
-        try:
-            # If user contains a profile
-            if Profile.exist_profile(self.model, request.user):
-                context['data_profile'] = self.model.objects.get(user=request.user)
-                context['data_user'] = User.objects.get(username=request.user)
-                return render(request,
-                              self.template_name,
-                              context)
-            else:
-                return render(request,
-                              template_name=self.template_name,
-                              context={'error':'Does not exist profile'})
-        except Exception as exc:
-            # Fix and handled error
+        """ Return template form update profile """
+        if self.model.exist_profile(self.model, request.user):
+            return super().get(request, **kwargs)
+        else:
+            # errors = list(FormProfile._)
             return render(request,
-                          self.template_name,
-                          context={'exception':exc})
+                            template_name=self.template_name,
+                            context=
+                                {
+                                'does_not_profile':'Does not exist profile',
+                                }
+                        )
+
+    def post(self, request, **kwargs):
+
+        # Get info to profile inputs
+        filter_usr = Profile.objects.filter(pk=kwargs['pk']).first()
+        form = FormProfile(data=request.POST, files=request.FILES, instance=filter_usr)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.success_url)
+        else:
+            errors = list(form._errors.values()) # Errors handled by django.forms.utils
+            return render(request, self.template_name, context={'error':errors})
+        return super().post(request)
