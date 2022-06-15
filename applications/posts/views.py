@@ -1,8 +1,10 @@
 """ DJANGO_APPS """
 # HttpResponse
 from django.shortcuts import render
+from django.urls import reverse_lazy
 
 from django.views.generic.base import TemplateView
+from django.http import HttpResponseRedirect
 
 # Generics edit
 from django.views.generic.edit import (
@@ -16,41 +18,15 @@ from django.views.generic.edit import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 """ THIRD_PARTY_APPS """
-from datetime import datetime
 #...
 """ LOCAL_APPS """
 # Models
-from applications.posts import models
+from applications.posts.models import Posts
+from applications.users.models import Profile
+
+# Forms
+from applications.posts.forms import FormPost
 # )
-
-profiles = {
-    '1':{
-        'name':'Ferreyra Gonzalo',
-        'website':'https://translate.google.com/?hl=es&sl=en&tl=es&op=translate',
-        'username':'Gonzi el piola',
-        'picture':'https://img.freepik.com/foto-gratis/retrato-joven-sonriente-gafas_171337-4842.jpg?t=st=1651905672~exp=1651906272~hmac=19cd375bffbbc4f423827813a1099061440d3c798fabb49448c3f53a2799f73a&w=740',
-        'description':'I have hungry and i am tired',
-        'last_modified':datetime.now()
-    },
-    '2':{
-
-        'name':'Carrefour Marcelo',
-        'website':'https://translate.google.com/?hl=es&sl=en&tl=es&op=translate',
-        'username':'Flamenco',
-        'picture':'https://img.freepik.com/foto-gratis/retrato-joven-sonriente-senalando-dedo_171337-1619.jpg?t=st=1651905672~exp=1651906272~hmac=83f227b5695906a6581c5a8bc34cb5c144d4cd7ee2f9d963eea8eac65de25c52&w=740',
-        'description':'I have hungry and i am tired',
-        'last_modified':datetime.now()
-    },
-    '3':{
-
-        'name':'Blanco Ignacio',
-        'website':'https://translate.google.com/?hl=es&sl=en&tl=es&op=translate',
-        'username':'Gonzales',
-        'picture':'https://img.freepik.com/foto-gratis/hombre-computadora-portatil-estudiante-computadora-aislado-tenencia-persona_488220-37851.jpg?w=740',
-        'description':'I am hungry and i am tired',
-        'last_modified':datetime.now()
-    }
-}
 
 class HomeView(LoginRequiredMixin,TemplateView):
     """ Display a template """
@@ -59,8 +35,30 @@ class HomeView(LoginRequiredMixin,TemplateView):
 
     template_name = 'posts/home.html'
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profiles'] = profiles
+        context['posts'] = Posts.objects.all()
+        context['profile'] = Profile.objects.filter(user=request.user).first()
+        return render(request, self.template_name, context)
 
-        return context
+class CreatePostView(CreateView, LoginRequiredMixin):
+    """ Create posts """
+    login_url = 'login'
+    redirect_field_name = 'login'
+
+    model = Posts
+    template_name = 'posts/post_create.html'
+    form_class = FormPost
+    success_url = reverse_lazy('home')
+
+    def post(self, request):
+        """ Create posts from logued in """
+
+        form_post = self.form_class(request.POST, request.FILES)
+        if form_post.is_valid():
+            Posts.objects.create(
+                profile = Profile.objects.filter(user=request.user).first(),
+                description = form_post['description'].value(),
+                post_image = form_post['post_image'].value(),
+            )
+        return HttpResponseRedirect(self.success_url)
