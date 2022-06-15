@@ -257,7 +257,6 @@ class ProfileUpdateView( UpdateView):
         if self.model.exist_profile(self.model, request.user):
             return super().get(request, **kwargs)
         else:
-            # errors = list(FormProfile._)
             return render(request,
                             template_name=self.template_name,
                             context=
@@ -277,4 +276,3 @@ class ProfileUpdateView( UpdateView):
         else:
             errors = list(form._errors.values()) # Errors handled by django.forms.utils
             return render(request, self.template_name, context={'error':errors})
-        return super().post(request)
