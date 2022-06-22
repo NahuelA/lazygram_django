@@ -18,26 +18,69 @@
     <!-- All sections -->
     {% block container_main %}
 
-    <section class="posts-section">
+    <section style="margin-top: 5em;">
 
-        {% for i in profiles.items %}
+        {% for post in posts %}
 
-        <div class="post">
-            <div class="container-picture">
-                <img class="img-profile" src="{{i.1.picture}}" alt="">
-                <div class="container-last-modified-title">
-                    <h5 class="title-profile">{{i.1.name}}</h5>
-                    <p class="last-modified">{{i.1.last_modified}}</p>
+        <div class="row w-50 mx-auto mb-4">
+
+            <!-- Profile -->
+            <div class="row align-items-center">
+                <div class="col-sm-1">
+
+                    <img 
+                    style="width:50px; height: 50px;"
+                    class="rounded-circle"
+                    src="{{post.profile_name.picture.url}}" alt="">
+                </div>
+                <div class="col-sm">
+                    <h5 class="h5">{{post.profile_name.user}}</h5>
+                </div>
+                <div class="">
+                    <p class="h6 pt-1 px-1">{{post.last_modified}}</p>
                 </div>
             </div>
-            <div class="container-post">
-                <img class="post-picture" src="{{i.1.picture}}" alt="">
-                <p class="post-description">{{i.1.description}}</p>
+
+            <!-- Image posted -->
+            <div class="">
+
+                <img 
+                    class="w-100 rounded-top"
+                    style="max-height:500px;
+                           object-fit: scale-down;"
+                    src="{{post.post_image.url}}" alt="{{post.profile_name.user.username}}">
+
+                <!-- Comment-share-like -->
+                <div class="row justify-content-end pt-1">
+                    <img
+                    style="width: 7.5%;"
+                    src="{% static 'imgs/heart-regular.svg' %}" alt="">
+
+                    <img
+                        style="width: 7.5%;"
+                        src="{% static 'imgs/comment-regular.svg' %}" alt="comment-regular">
+
+                    <img
+                    style="width: 7.5%;"
+                    src="{% static 'imgs/share-from-square-regular.svg' %}" alt="share-from-square-regular">
+
+                    <div class="row pt-1">
+                        <span class="text-end fs-6">300,000 likes</span>
+                    </div>
+                </div>
+                <div class="">
+                    <p class="fs-6">
+                        <span class="h6 me-2">{{post.profile_name.user.username}}</span>
+                        {{post.description}}
+                    </p>
+                </div>
             </div>
+            
+            <!-- Description -->
+            
         </div>
         {% endfor %}
     </section>
     {% endblock %}
 </body>
-
 </html>

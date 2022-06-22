@@ -30,8 +30,7 @@ from applications.posts.forms import FormPost
 
 class HomeView(LoginRequiredMixin,TemplateView):
     """ Display a template """
-    login_url = 'login'
-    redirect_field_name = 'login'
+    login_url = 'users:login'
 
     template_name = 'posts/home.html'
 
@@ -49,15 +48,14 @@ class CreatePostView(CreateView, LoginRequiredMixin):
     model = Posts
     template_name = 'posts/post_create.html'
     form_class = FormPost
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('posts:home')
 
     def post(self, request):
         """ Create posts from logued in """
-
         form_post = self.form_class(request.POST, request.FILES)
         if form_post.is_valid():
             Posts.objects.create(
-                profile = Profile.objects.filter(user=request.user).first(),
+                profile_name = Profile.objects.filter(user=request.user).first(),
                 description = form_post['description'].value(),
                 post_image = form_post['post_image'].value(),
             )

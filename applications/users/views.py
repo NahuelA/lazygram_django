@@ -2,12 +2,13 @@
 
 """ DJANGO_APPS """
 # HttpResponse
+import json
 from django.shortcuts import (
     
     render,
     HttpResponseRedirect,
 )
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 
 # Generics edit
 from django.views.generic.edit import (
@@ -21,7 +22,7 @@ from django.views.generic.edit import (
 from django.views.generic.list import ListView
 
 # Auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import (
 
     # views, ***REVISE***
@@ -38,66 +39,64 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.users.forms import (
 
     FormUser,
+    FormLogin,
     FormProfile,
 )
 
 """ THIRD_PARTY_APPS """
 # ...
 """ LOCAL_APPS """
-
 # Models
 from applications.users.models import Profile
 from django.contrib.auth.models import User
 
-
 # Login account
-def login_view(request, **kwargs):
+class Login(LoginView):
     """ Login with any account """
-
     template_name = 'users/login.html'
-    success_url = reverse('posts:home')
+    success_url = reverse_lazy('posts:home')
+    redirect_authenticated_user= True
     permission_denied_message = 'Invalid account'
-    form_class = FormUser
+    form_class = FormLogin
 
-    if request.method == 'GET':
-        # Render template from login
-        return render(request, template_name, context={'form':form_class})
-    if request.method == 'POST':
-        # Get post
-        username = request.POST['username']
-        password = request.POST['password']
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['form'] = self.form_class
+        return context
 
-        # Auth
-        auth = authenticate(request, username=username, password=password)
+    def post(self, request):
+        tmp = self.template_name
+        context = {'form':self.form_class,
+                   'msg_error':''}
 
-        # If user not found, user = None
-        if auth != None:
+        form = self.form_class(request.POST)
 
-            # Login and redirect
-            login(request, auth)
-            return HttpResponseRedirect(redirect_to=success_url)
+        if form.is_valid():
+            username = form['username'].value()
+            password = form['password'].value()
+            auth = authenticate(request, username=username, password=password)
 
-        else:
-            # If user is not found
-            return render (request, template_name,
-                            context={
-                                    'form':form_class,
-                                    'msg_error':[permission_denied_message, auth]
-                                    }
-                            )
+            if auth != None:
+                login(request, auth)
+                return HttpResponseRedirect(redirect_to=self.success_url)
+            else:
+                context['msg_error'] = 'Username or password invalid'
+        return render(request, tmp, context)
 
 # Logout account
-@login_required(login_url='login')
-def logout_view(request):
+class Logout(LoginRequiredMixin, LogoutView):
     """ Logout from account """
-    success_url = reverse('users:login')
-    logout(request)
-    return HttpResponseRedirect(success_url)
+    login_url = 'users:login'
+    redirect_field_name = 'users:login'
+
+    success_url = reverse_lazy('users:login')
+    def post(self, request):
+        logout(request)
+        return HttpResponseRedirect(self.success_url)
 
 # Create new user
 class UserSignUpView(CreateView):
     """ Sign-up user from Copygram """
-
     model = User
     form_class = FormUser
 
@@ -170,7 +169,6 @@ class UserSignUpView(CreateView):
 # Create profile
 class ProfileSignUpView(LoginRequiredMixin, CreateView):
     """ Sign-up profile from Copygram """
-    # Login required
     login_url = 'users:login'
     redirect_field_name = 'users:login'
 

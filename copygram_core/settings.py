@@ -29,7 +29,6 @@ from decouple import config
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -136,6 +135,7 @@ MEDIA_URL = '/media/'
 
 # Logins
 LOGIN_URL = 'accounts/login'
+LOGIN_REDIRECT_URL = 'posts:home'
 
 # Email settings
 # EMAIL_HOST = 'django.core.mail.backends.smtp'

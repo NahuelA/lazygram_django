@@ -42,16 +42,15 @@
                             <div class="d-grid gap-2 col-12 my-2">
                                 <button type="submit" class="btn btn-primary btn-lg">Login</button>
                             </div>
+                            {# Validations #}
+                            {% if msg_error %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{msg_error}}
+                                </div>
+                            {% endif %}
                             <div class="mx-auto">
                                 <a href="{% url 'users:user-create' %}">Don't have an account? register now!</a>
                             </div>
-                            {# Validations #}
-                            {% if msg_error1 is None %}
-                                <p class="error">{{msg_error.0}}</p>
-                            {% endif %}
-                            {% if bad_logout.1 %}
-                                <p class="error">{{bad_logout.0}}</p>
-                            {% endif %}
                         </div>
                     </form>
                 </div>

@@ -1,17 +1,6 @@
 """ Form to users login and edit profile """
-from django.forms import (
-
-    # Main class
-    ModelForm,
-    # Widgets
-    Textarea,
-    NumberInput,
-    FileInput,
-    TextInput,
-    PasswordInput,
-    EmailInput,
-    DateInput
-)
+# All forms
+from django import forms
 
 # Validation
 from django.core.exceptions import ValidationError
@@ -21,7 +10,7 @@ from django.core.exceptions import ValidationError
 from .models import Profile
 from django.contrib.auth.models import User
 
-class FormUser(ModelForm):
+class FormUser(forms.ModelForm):
     class Meta:
         model   = User
         exclude = [
@@ -30,27 +19,27 @@ class FormUser(ModelForm):
                    'is_superuser','groups',
                    'user_permissions']
         widgets = {
-            'username':TextInput(attrs={'required':True,
+            'username':forms.TextInput(attrs={'required':True,
                                        
                                        'placeholder':'Username',
                                        'class':'form-control'}),
 
-            'password':PasswordInput(attrs={'type':'password',
+            'password':forms.PasswordInput(attrs={'type':'password',
                                             'required':True,
                                             'placeholder':'Password',
                                             'class':'form-control'}),
 
-            'email': EmailInput(attrs={'required':True,
+            'email': forms.EmailInput(attrs={'required':True,
                                        'placeholder':'youremail@email.com',
                                        'pattern':'.+@gmail\.com',
                                        'class':'form-control'}),
 
-            'first_name':TextInput(attrs={
+            'first_name':forms.TextInput(attrs={
                                        'required':False,
                                        'placeholder':'First name',
                                        'class':'form-control'}),
 
-            'last_name':TextInput(attrs={
+            'last_name':forms.TextInput(attrs={
                                        'required':False,
                                        'placeholder':'Last name',
                                        'class':'form-control'}),
@@ -64,20 +53,40 @@ class FormUser(ModelForm):
         else:
             return False
 
-        
-class FormProfile(ModelForm):
+class FormLogin(forms.Form):
+
+    username = forms.CharField(
+                                max_length=150,
+                                widget=
+                                       forms.TextInput(attrs={
+                                       'required':True,
+                                       'autofocus':True,
+                                       'placeholder':'Username',
+                                       'class':'form-control'})
+                                )
+    password = forms.CharField(
+                                widget=
+                                    forms.PasswordInput(attrs={
+                                    'type':'password',
+                                    'autocomplete':'current-password',
+                                    'required':True,
+                                    'placeholder':'Password',
+                                    'class':'form-control'})
+                            )
+
+class FormProfile(forms.ModelForm):
     class Meta:
         model   = Profile
         exclude = ['created','modified', 'age', 'user']
         widgets = {
-            'biography':Textarea(attrs={'cols':10, 'rows':5,
+            'biography':forms.Textarea(attrs={'cols':10, 'rows':5,
                                         'required':False,
                                         'maxlength':20,
                                         'class':'form-control',
                                         'placeholder':'Biography',
                                     }),
 
-            'picture':FileInput(attrs={'accept':(
+            'picture':forms.FileInput(attrs={'accept':(
                                                 '.png',
                                                 '.jpg',
                                                 '.svg',
@@ -88,17 +97,17 @@ class FormProfile(ModelForm):
                                         'class':'form-control',
                                         'placeholder':'Picture'
                                         }),
-            'date_of_birth':DateInput(attrs={
+            'date_of_birth':forms.DateInput(attrs={
                                         'class':'form-control',
                                         'placeholder':'Date of birth',
                                         'type':'date'}),
 
-            'website':TextInput(attrs={'placeholder':'Website',
+            'website':forms.TextInput(attrs={'placeholder':'Website',
                                        'required':False,
                                        'class':'form-control',
                                     }),
 
-            'phone_number':NumberInput(attrs={'min':0,
+            'phone_number':forms.NumberInput(attrs={'min':0,
                                               'required':False,
                                               'placeholder':'Phone number',
                                               'class':'form-control',}),

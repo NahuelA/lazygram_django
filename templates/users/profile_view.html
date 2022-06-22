@@ -16,12 +16,12 @@
     
     {% block container_main %}
 
+    <main style="margin-top: 5em;">
         {% if does_not_profile %}
             <div class="alert alert-danger" role="alert">
                 {{does_not_profile}} <a href="{% url 'users:user-create' %}">Do you want to create profile?</a>
             </div>
         {% else %}
-        <main>
             <div class="container mb-3" style="margin-top: 1em;">
                 <div class="row">
 
@@ -103,8 +103,8 @@
                     {% endfor %}
                 </div>
             </div> -->
+            {% endif %}
         </main>
-        {% endif %}
     {% endblock %}
     
 </body>

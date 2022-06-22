@@ -14,6 +14,11 @@ class Posts(models.Model):
                                 null=True,
                             )
 
+    post_image = models.ImageField(
+                                upload_to='uploads/pictures_posted',
+                                null=True,
+                            )
+                            
     description = models.CharField(
                                    max_length=250,
                                    blank=True,
@@ -34,10 +39,6 @@ class Posts(models.Model):
                                          db_index=True,
                                         )
 
-    post_image = models.ImageField(
-                                upload_to='uploads/pictures_posted',
-                                null=True,
-                            )
 
     def __str__(self):
         return '%sf %sf' % (self.profile, self.created)
