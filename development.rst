@@ -23,9 +23,16 @@ create profile model
   Login
 *********
   - Login view from sign in *C*
-  - Change password *I*
+  - Password_change
+  - Password_change_done
+  - Password_reset
+  - Password_reset_done
+  - Password_reset_confirm
+  - Password_reset_complete
+
   - Forgot your password? *I*
   - Validation change password *I*
+
 
 ***********
   Sign-up
