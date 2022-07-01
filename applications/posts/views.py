@@ -31,7 +31,6 @@ from applications.posts.forms import FormPost
 class HomeView(LoginRequiredMixin,TemplateView):
     """ Display a template """
     login_url = 'users:login'
-
     template_name = 'posts/home.html'
 
     def get(self, request, **kwargs):
@@ -42,8 +41,8 @@ class HomeView(LoginRequiredMixin,TemplateView):
 
 class CreatePostView(CreateView, LoginRequiredMixin):
     """ Create posts """
-    login_url = 'login'
-    redirect_field_name = 'login'
+    login_url = 'users:login'
+    redirect_field_name = 'users:login'
 
     model = Posts
     template_name = 'posts/post_create.html'
