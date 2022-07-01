@@ -1,0 +1,20 @@
+:root{
+
+    --violet-light: #c179ff;
+    --text-light: #f8f9fa;
+}
+
+.hover-1:hover{
+
+    background-color: var(--violet-light);
+}
+
+.hover-text-1:hover{
+
+    color: var(--violet-light);
+}
+
+.text-light-1{
+
+    color: var(--text-light);
+}
