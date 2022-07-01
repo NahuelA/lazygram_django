@@ -2,7 +2,6 @@
 
 """ DJANGO_APPS """
 # HttpResponse
-import json
 from django.shortcuts import (
     
     render,
@@ -25,7 +24,6 @@ from django.views.generic.list import ListView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import (
 
-    # views, ***REVISE***
     authenticate,
     login,
     logout,
@@ -66,11 +64,10 @@ class Login(LoginView):
 
     def post(self, request):
         tmp = self.template_name
-        context = {'form':self.form_class,
-                   'msg_error':''}
-
-        form = self.form_class(request.POST)
-
+        context = {}
+        context['form'] = self.form_class
+        # Get post data
+        form = self.form_class(data=request.POST)
         if form.is_valid():
             username = form['username'].value()
             password = form['password'].value()
@@ -86,17 +83,20 @@ class Login(LoginView):
 # Logout account
 class Logout(LoginRequiredMixin, LogoutView):
     """ Logout from account """
+    # Login required
     login_url = 'users:login'
     redirect_field_name = 'users:login'
-
     success_url = reverse_lazy('users:login')
+    
     def post(self, request):
         logout(request)
         return HttpResponseRedirect(self.success_url)
 
+# CRUD #
+
 # Create new user
 class UserSignUpView(CreateView):
-    """ Sign-up user from Copygram """
+    """ Sign-up user from Lazygram """
     model = User
     form_class = FormUser
 
@@ -168,7 +168,8 @@ class UserSignUpView(CreateView):
 
 # Create profile
 class ProfileSignUpView(LoginRequiredMixin, CreateView):
-    """ Sign-up profile from Copygram """
+    """ Sign-up profile from Lazygram """
+    # Login required
     login_url = 'users:login'
     redirect_field_name = 'users:login'
 
@@ -183,23 +184,30 @@ class ProfileSignUpView(LoginRequiredMixin, CreateView):
         # Adding post data in form class and saving in form_profile variable
         user = User.objects.filter(id=int(request.user.id)).first()
         form_profile = self.form_class(request.POST)
+
         if form_profile.is_valid():
             # Create profile to user
             Profile.objects.create(
                 user = user,
-                biography = request.POST.get('biography'),
-                picture = request.FILES.get('picture'),
-                date_of_birth = request.POST.get('date_of_birth'),
-                website = request.POST.get('website'),
-                phone_number = request.POST.get('phone_number'),
+                biography = form_profile['biography'].value() ,
+                picture = form_profile['picture'].value(),
+                date_of_birth = form_profile['date_of_birth'].value(),
+                website = form_profile['website'].value(),
+                phone_number = form_profile['phone_number'].value(),
             )
             return HttpResponseRedirect(redirect_to=self.success_url)
         else:
             # Invalid save profile
-            errors = list(form_profile._errors.values()) # Errors handled by django.forms.utils
-            return render(request, self.template_name,
-                            context={'error':errors,
-                                    'form':self.form_class})
+            context = {
+                    # Errors handled by django.forms.utils
+                    'error':list(form_profile._errors.values()),
+                    'form':self.form_class
+            }
+            return render(
+                        request,
+                        self.template_name,
+                        context=context
+                    )
 
 # Read profiles
 class ProfileView(LoginRequiredMixin,ListView):
@@ -207,28 +215,28 @@ class ProfileView(LoginRequiredMixin,ListView):
     # Login required
     login_url = 'users:login'
     redirect_field_name = 'users:login'
-
+    does_not_profile = 'Does not exist profile'
     model = Profile
     template_name = 'users/profile_view.html'
 
     def get(self, request, **kwargs):
         """ Display data for the authenticated user """
-        context = {}
+        context = {'profile':''}
         # If user contains a profile
         profile_exist = Profile.exist_profile(self.model, request.user)
         if profile_exist:
             context['profile'] = self.model.objects.get(user=request.user)
-            return render(request,
-                            self.template_name,
-                            context
+            return render(
+                         request,
+                         template_name=self.template_name,
+                         context=context
                         )
         else:
-            return render(request,
-                            template_name=self.template_name,
-                            context=
-                                {
-                                'does_not_profile':'Does not exist profile',
-                                }
+            context['does_not_profile'] = self.does_not_profile
+            return render(  
+                        request,
+                        template_name=self.template_name,
+                        context = context
                         )
 
 # Update profile
@@ -246,6 +254,7 @@ class ProfileUpdateView( UpdateView):
     redirect_field_name = 'users:login'
 
     model = Profile
+    does_not_profile = 'Does not exist profile'
     template_name = 'users/profile_update.html'
     form_class = FormProfile
     success_url = reverse_lazy('users:profile-view')
@@ -255,12 +264,11 @@ class ProfileUpdateView( UpdateView):
         if self.model.exist_profile(self.model, request.user):
             return super().get(request, **kwargs)
         else:
-            return render(request,
-                            template_name=self.template_name,
-                            context=
-                                {
-                                'does_not_profile':'Does not exist profile',
-                                }
+            context = {'does_not_profile':self.does_not_profile}
+            return render(
+                        request,
+                        template_name=self.template_name,
+                        context= context,
                         )
 
     def post(self, request, **kwargs):
@@ -272,5 +280,5 @@ class ProfileUpdateView( UpdateView):
             form.save()
             return HttpResponseRedirect(self.success_url)
         else:
-            errors = list(form._errors.values()) # Errors handled by django.forms.utils
-            return render(request, self.template_name, context={'error':errors})
+            context = {'error':list(form._errors.values())} # Errors handled by django.forms.utils
+            return render(request, self.template_name, context=context)
