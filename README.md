@@ -1,6 +1,6 @@
-# Copygram
+# Lazygram
 
-Copygram project is a copy of Instagram make with python Django, is a 
+Lazygram project is a copy of Instagram make with python Django, is a 
 simply, fast and functional web application to interconect with the world.
 
 ## Requirements
@@ -16,6 +16,7 @@ Have few requirements:
 Feautres it's already:
 
 - Create user and profile
+- Login-Logout
 - Create posts
 
 Features to update:
@@ -25,9 +26,12 @@ Features to update:
 - Follow and followers
 - Like
 
+_For more information, read the following:_
+[Features in development](https://github.com/NahuelA/lazygram_Django/blob/development/development.rst)
+
 ## Tools have used to make project
 
-Copygram it was make to some technologies strongly and that simply use.
+Lazygram it was make to some technologies strongly and that simply use.
 
 - Python 3.9
 - Django framework 4.0.2
@@ -42,13 +46,13 @@ It is very simply to use, needs 3 simples steps:
 
 ### Step 1:
 
-Create an account in copygram app
+Create an account in lazygram app
 - image and link
 
 ### Step 2:
 
 Create a profile (optional but recomended), first required
-have a registered user in copygram app.
+have a registered user in lazygram app.
 - image
 
 ### Step 3:
