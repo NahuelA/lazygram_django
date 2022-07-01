@@ -17,7 +17,7 @@
 
     <!-- Titles -->
     {% block title %}
-        <title>Home | Copygram</title>
+        <title>Home | Lazygram</title>
     {% endblock %}
 </head>
 <body>
@@ -27,8 +27,8 @@
             <nav class="menu">
                 <div class="logo">
                     <a href="{% url 'posts:home' %}">
-                        <img src="{% static 'imgs/logo_instagram.png' %}" alt="copygram_logo">
-                        <h1>Copygram</h1>
+                        <img src="{% static 'imgs/logo_instagram.png' %}" alt="lazygram_logo">
+                        <h1>Lazygram</h1>
                     </a>
                 </div>
                 <ul class="items-menu-ul">
@@ -72,6 +72,14 @@
                        class="linkf-menu">
                        <li class="itemf-menu">
                            <img src="{% static 'imgs/circle-plus-solid.svg' %}"
+                                class="rounded-circle"
+                                alt="">
+                            </li>
+                    </a>
+                    <a href="{% url 'lazymovies' %}"
+                       class="linkf-menu">
+                       <li class="itemf-menu">
+                           <img src="{% static 'lazymovies/imgs/icons8-movie-64.png' %}"
                                 class="rounded-circle"
                                 alt="">
                             </li>

@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- GOOGLE FONTS styles -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&
+            display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Bootstrap -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+        />
+
+        <!-- CSS styles -->
+        <link
+            rel="stylesheet"
+            href="{% static 'lazymovies/css/hovers.css' %}"
+        />
+        <link rel="stylesheet" href="{% static 'lazymovies/css/main.css' %}" />
+        <!-- Fontawesome -->
+        <title id="title-window">Lazymovies | Home</title>
+    </head>
+    <body>
+        <header class="header">
+            <div class="container-menu">
+                <nav class="navbar navbar-expand-lg bg-dark">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <img
+                                    class="img-title"
+                                    src="{% static 'lazymovies/imgs/icons8-movie-64.png' %}"
+                                    alt=""
+                                />
+                            </div>
+                            <div class="col">
+                                <h1
+                                    class="navbar-brand fs-2 text-light-1 hover-text-1"
+                                    role="button"
+                                >
+                                    Lazymovies
+                                </h1>
+                            </div>
+                        </div>
+                        <button
+                            class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                        >
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div
+                            class="collapse navbar-collapse"
+                            id="navbarSupportedContent"
+                        >
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <!-- Go-to-lazygram -->
+                                <li class="nav-item nav-link fs-4">
+                                    <i
+                                        class="fa-solid fa-angle-left hover-text-1 text-light-1"
+                                        role="button"
+                                        id="gb-lazygram"
+                                    ></i>
+                                </li>
+                                <!-- Categories dropdown -->
+                                <li class="nav-item dropdown">
+                                    <span
+                                        class="nav-link dropdown-toggle fs-5 hover-text-1 text-light-1"
+                                        id="navbarDropdown"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        Categories
+                                    </span>
+                                    <ul
+                                        class="dropdown-menu"
+                                        aria-labelledby="navbarDropdown"
+                                    >
+                                        <li
+                                            role="button"
+                                            class="dropdown-item"
+                                            id="action-cm"
+                                        >
+                                            Action
+                                        </li>
+                                        <li
+                                            role="button"
+                                            class="dropdown-item"
+                                            id="romance-cm"
+                                        >
+                                            Romance
+                                        </li>
+                                        <li
+                                            role="button"
+                                            class="dropdown-item"
+                                            id="horror-cm"
+                                        >
+                                            Horror
+                                        </li>
+                                        <li
+                                            role="button"
+                                            class="dropdown-item"
+                                            id="drama-cm"
+                                        >
+                                            Drama
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li
+                                            role="button"
+                                            class="dropdown-item"
+                                            id="categories-menu"
+                                        >
+                                            All categories
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- Trends -->
+                                <li class="nav-item nav-link fs-4">
+                                    <i
+                                        class="fa-solid fa-film hover-text-1 text-light-1"
+                                        role="button"
+                                        id="trends"
+                                    ></i>
+                                </li>
+                                <!-- Home -->
+                                <li class="nav-item nav-link fs-4">
+                                    <i
+                                        class="fa-solid fa-house hover-text-1 text-light-1"
+                                        role="button"
+                                        id="home-menu"
+                                    ></i>
+                                </li>
+
+                                <!-- logout -->
+                                <li class="nav-item nav-link fs-4">
+                                    <i
+                                        class="fa-solid fa-right-from-bracket hover-text-1 text-light-1"
+                                        role="button"
+                                        id="logout"
+                                    ></i>
+                                </li>
+                            </ul>
+
+                            <!-- Form for search -->
+                            <div class="d-flex" role="search">
+                                <input
+                                    class="form-control me-2"
+                                    type="search"
+                                    placeholder="Search films"
+                                    aria-label="Search"
+                                    id="inp-search-mv"
+                                />
+                                <button
+                                    class="btn btn-outline-light hover-1"
+                                    type="button"
+                                    id="search-mv"
+                                >
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <div class="position-relative" id="container-trends">
+            <!-- <div class="container-trendings-imgs">
+                <div class="container-categories-abs">
+                    <img src="../static/imgs/galaxy-7040416_1280.png" alt="" class="trendings-imgs">
+                    
+                    <div class="container-categories">
+                        <span class="categories">Action</span>
+                        <span class="categories">Romance</span>
+                        <span class="categories">Horror</span>
+                    </div>
+                </div> 
+            </div> -->
+        </div>
+
+        <main id="main">
+
+            <!-- <div class="principal-title">
+                <h1>The Movigram TV for lazygrams users</h1>
+            </div> -->
+
+			<!-- Architecture -->
+            <!-- <section class="main-section" id="section-most-popular">
+                <h2 id="title-section-mp"></h2>
+                <div class="main-container" id="container-popular">
+                    	<article class="container-poster">
+                    <img src="../static/imgs/galaxy-7040416_1280.png" alt=""
+                    class="poster-movi">
+                    <div class="description-movi">
+                        <p>Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, beatae.</p>
+                    </div>
+                </article>
+                </div>
+            </section> -->
+
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Fontawesome script -->
+        <script
+            src="https://kit.fontawesome.com/ef9cbcfdf3.js"
+            crossorigin="anonymous"
+        ></script>
+        <!-- Bootstrap script -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Local scripts -->
+        <script
+            type="module"
+            src="{% static 'lazymovies/js/main.js' %}"
+        ></script>
+        <script
+            type="module"
+            src="{% static 'lazymovies/js/navigation.js' %}"
+        ></script>
+    </body>
+</html>
