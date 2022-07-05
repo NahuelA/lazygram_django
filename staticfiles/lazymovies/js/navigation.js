@@ -4,14 +4,9 @@ import {
     home_menu,
     main,
     trends,
-    categories_menu,
-    action_cm,
-    romance_cm,
-    horror_cm,
-    drama_cm,
     search_btn,
     inp_search_mv,
-    go_back_lazygram
+    go_back_lazygram,
 
 } from "./main.js"
 
@@ -21,7 +16,8 @@ import {
          get_trends_home,
          // Views to trends
          get_home,
-         get_views
+         get_views,
+         categories_view,
         } from "./views.js"
 
 const hashChange = () =>{
@@ -32,7 +28,8 @@ const hashChange = () =>{
     else if (location.hash.startsWith('#top_rated')){
         get_views('/movie/top_rated','Top rated')
     }
-    else if (location.hash.startsWith('#all_categories')) get_categories_view()
+    else if (location.hash.startsWith('#category=')){
+    }
     else if (location.hash.startsWith('#search=')) get_search_res_view(inp_search_mv.value)
     else get_home_view()
 }
@@ -48,16 +45,7 @@ home_menu.addEventListener('click',()=>{
     location.hash = '#home'
 })
 
-/* Categories hash*/
-categories_menu.addEventListener('click',()=>{
-    location.hash = '#all_categories'
-})
-
 /* Sub categories hash*/
-action_cm.addEventListener('click',()=>location.hash='#action')
-romance_cm.addEventListener('click',()=>location.hash='#romance')
-horror_cm.addEventListener('click',()=>location.hash='#horror')
-drama_cm.addEventListener('click',()=>location.hash='#drama')
 
 /* Top rated hash*/
 trends.addEventListener('click',()=>{
@@ -80,17 +68,16 @@ go_back_lazygram.addEventListener('click',(e)=>{
 
 // Get views
 
-/* CATEGORIES VIEW*/
-const get_categories_view = () => {
-
-    title_window.innerHTML='Lazymovies | Categories'
-}
-
 /* HOME VIEW*/
 const get_home_view = async () => {
 
     main.innerHTML = ''
-    get_trends_home()
+    await get_trends_home()
+    await categories_view()
+    const ctgy = document.querySelectorAll('.ctgy').forEach((category)=>{
+
+        console.log(category)
+    })
     await get_home('/movie/top_rated', 'Top rated', true)
     await get_home('/movie/popular', 'Most popular')
     await get_home('/movie/upcoming', 'Upcoming')

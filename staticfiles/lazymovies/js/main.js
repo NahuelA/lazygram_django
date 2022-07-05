@@ -28,11 +28,27 @@ export const create_node = (elemn) => {
 export const go_back_lazygram = $("#gb-lazygram");
 export const home_menu = $("#home-menu");
 /* Categories */
-export const categories_menu = $("#categories-menu");
-export const action_cm = $("#action-cm");
-export const romance_cm = $("#romance-cm");
-export const horror_cm = $("#horror-cm");
-export const drama_cm = $("#drama-cm");
+
+// export const ctgy_action = $('#28').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_adventure = $('#12').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_animation = $('#16').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_comedy = $('#35').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_crime = $('#80').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_documentary = $('#99').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_drama = $('#18').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_family = $('#10751').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_fantasy = $('#14').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_history = $('#36').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_horror = $('#27').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_music = $('#10402').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_mystery = $('#9648').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_romance = $('#10749').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_science_fiction = $('#878').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_tv_movie = $('#10770').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_thriller = $('#53').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_war = $('#10752').addEventListener('click', ()=>{category_select_view(37)})
+// export const ctgy_western = $('#37').addEventListener('click', ()=>{category_select_view(37)})
+
 /* Top rated */
 export const trends = $("#trends");
 /* Search button */
@@ -44,5 +60,7 @@ export const title_window = $("#title-window");
 /* Containers for do not overload */
 
 export const main = $("#main");
+export const aside = $('#aside-bar')
+
 // Trends
 export const container_trends_main = $("#container-trends");

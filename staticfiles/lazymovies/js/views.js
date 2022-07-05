@@ -4,6 +4,7 @@
 import {
     container_trends_main,
     main,
+    aside,
     title_window,
 
     // Function create_elements
@@ -31,7 +32,6 @@ export const get_trends_home = async () => {
 
     // classList
     container_article_trends.classList = 'container-trendings-imgs'
-    main.classList = 'position-relative-1x'
 
     movies.forEach((src) => {
         // Img
@@ -56,17 +56,20 @@ export const get_trends_home = async () => {
 // Principal title
 const h2_principal = create_node('h2')
 h2_principal.innerHTML = 'The Movigram TV for lazygrams users'
-h2_principal.classList = 'principal-title'
+h2_principal.classList = 'align-cnt'
 
 // GET movies in HOME
-export const get_home = async (url_movie_home, title, principal_title=false) => {
-
+export const get_home = async (
+    url_movie_home,
+    title,
+    principal_title = false
+) => {
     /* GET movies in home section */
     const { data } = await api(url_movie_home)
     const results = data.results
 
     // Change title window
-    title_window.innerHTML='Lazymovies | Home'
+    title_window.innerHTML = 'Lazymovies | Home'
 
     /* Active */
     container_trends_main.classList.remove('inactive')
@@ -75,17 +78,17 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
 
     // Titles
     const h3_title = create_node('h3')
-    
+
     // Containers
     const section_movie = create_node('section')
     const container_movies = create_node('div')
-    
+
     /* classList */
     section_movie.classList = 'main-section'
+    main.classList = 'col-sm-10'
     container_movies.classList = 'main-container'
     h3_title.classList = 'title'
 
-    
     // Appends
     h3_title.innerHTML = `${title}`
 
@@ -93,7 +96,6 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
     section_movie.insertBefore(h3_title, container_movies)
 
     results.forEach((result) => {
-
         /* Get popularity,poster_path,release_date */
         let { popularity, poster_path, release_date } = result
 
@@ -101,10 +103,10 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
 
         // Containers
         const article_movie = create_node('article')
-        
+
         // Img
         const poster_img = create_node('img')
-        
+
         // Rated
         const container_popularity = create_node('div')
         const star_rated = create_node('i')
@@ -113,12 +115,12 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
         // Date
         const container_date = create_node('div')
         const date = create_node('p')
-        
+
         /* classList */
 
         // Containers
         article_movie.classList = 'container-poster'
-        
+
         // Img and lazyloading
         poster_img.classList = 'poster-movi'
         poster_img.loading = 'lazy'
@@ -127,7 +129,7 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
         // Rated
         container_popularity.classList = 'grid-cols'
         star_rated.classList = 'fa-solid fa-star'
-        
+
         // Date
         container_date.classList = 'date-movies'
         date.classList = 'date-text'
@@ -139,16 +141,12 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
         container_date.appendChild(date)
         date.innerHTML = `${release_date}`
 
-        article_movie.append(
-                    poster_img,
-                    container_popularity,
-                    container_date,
-                )
+        article_movie.append(poster_img, container_popularity, container_date)
         container_movies.appendChild(article_movie)
         section_movie.appendChild(container_movies)
 
         // For add principal title one time
-        if (principal_title == true){
+        if (principal_title == true) {
             main.appendChild(h2_principal)
         }
 
@@ -158,7 +156,6 @@ export const get_home = async (url_movie_home, title, principal_title=false) => 
 
 // Movies views
 export const get_views = async (url_movie_class, title) => {
-
     /* Get movie class general in main section */
     const { data } = await api(url_movie_class)
     const res = data.results
@@ -167,7 +164,8 @@ export const get_views = async (url_movie_class, title) => {
     container_trends_main.classList.add('inactive')
 
     // Reset container
-    main.innerHTML = '' 
+    main.innerHTML = ''
+
     // Change title window
     title_window.innerHTML = `Lazymovies | ${title}`
 
@@ -180,21 +178,17 @@ export const get_views = async (url_movie_class, title) => {
     const section_movie = create_node('section')
     const main_container_grid = create_node('div')
 
-    /* classList */
-
     // Title
-    h2_title.classList = 'principal-title'
-    main.classList = 'position-relative-1x'
-    
+    h2_title.classList = 'title'
+
     // Containers
     section_movie.classList = 'main-section'
     main_container_grid.classList = 'main-container-grid'
-    
+
     // Appends
     h2_title.innerHTML = `${title}`
-    
-    res.forEach((result) => {
 
+    res.forEach((result) => {
         /* Get popularity,poster_path,release_date */
         const { popularity, poster_path, release_date } = result
 
@@ -240,11 +234,7 @@ export const get_views = async (url_movie_class, title) => {
         date.innerHTML = `${release_date}`
         container_date.appendChild(date)
 
-        article_movie.append(
-                    poster_img,
-                    container_popularity,
-                    container_date,
-                )
+        article_movie.append(poster_img, container_popularity, container_date)
         main_container_grid.appendChild(article_movie)
         section_movie.append(main_container_grid)
 
@@ -252,8 +242,51 @@ export const get_views = async (url_movie_class, title) => {
     })
 }
 
-/* Categories function view */
-const categories_view = () => {}
+// Categories view
+export const categories_view = async () => {
+    /* Get movies category */
+    const { data } = await api('/genre/movie/list')
+    const res = data.genres
+
+    // Change title window
+    title_window.innerHTML = 'Lazymovies | Categories'
+
+    /* Create elements */
+
+    // Title
+    const h2_title = create_node('h2')
+    h2_title.innerHTML = 'Categories'
+
+    // container
+    const section_category = create_node('section')
+    const container_category = create_node('div')
+
+    /* classList */
+
+    // Title
+    h2_title.classList = 'title'
+
+    // Containers
+    section_category.classList = 'main-section'
+    container_category.classList = 'align-cnt'
+
+    // Appends
+    h2_title.innerHTML = 'Categories'
+    container_category.appendChild(h2_title)
+    section_category.appendChild(container_category)
+    aside.appendChild(section_category)
+
+    res.forEach((category) => {
+        // Category
+        const category_btn = create_node('button')
+        category_btn.innerHTML = category.name
+        category_btn.id = category.id
+
+        // classList
+        category_btn.classList = `fs-6 btn btn-primary mrg-1 ctgy`
+        container_category.appendChild(category_btn)
+    })
+}
 
 // If select one category, return a view with this category
 const category_select_view = (category) => {}
