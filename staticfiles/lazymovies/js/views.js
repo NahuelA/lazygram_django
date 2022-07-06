@@ -251,6 +251,9 @@ export const categories_view = async () => {
     // Change title window
     title_window.innerHTML = 'Lazymovies | Categories'
 
+    // Reset container
+    aside.innerHTML = ''
+
     /* Create elements */
 
     // Title
@@ -286,10 +289,129 @@ export const categories_view = async () => {
         category_btn.classList = `fs-6 btn btn-primary mrg-1 ctgy`
         container_category.appendChild(category_btn)
     })
+
+    // Select any category and go to movies and change hash
+    document.querySelectorAll('.ctgy').forEach((category) => {
+        category.addEventListener('click', () => {
+            location.hash = `#category=${category.id}`
+        })
+    })
 }
 
 // If select one category, return a view with this category
-const category_select_view = (category) => {}
+export const category_select_view = async (category_id) => {
+    let all_movies
+    let genres_
+    console.log(category_id)
+    let ctgy_name = undefined
+    let i = 0
+
+    // Inactive
+    container_trends_main.classList.add('inactive')
+
+    // Reset container
+    main.innerHTML = ''
+
+    // Change title window
+    title_window.innerHTML = `Lazymovies | ${ctgy_name}`
+
+    /* Global elements*/
+
+    // Title
+    const h2_title = create_node('h2')
+
+    // Containers
+    const section_movie_ctgy = create_node('section')
+    const main_container_grid = create_node('div')
+
+    // classList
+    h2_title.classList = 'title left'
+    main.classList = 'col-sm-10'
+    section_movie_ctgy.classList = 'main-section'
+    main_container_grid.classList = 'main-container-grid'
+
+    // Appends
+    section_movie_ctgy.append(h2_title, main_container_grid)
+    main.appendChild(section_movie_ctgy)
+    axios
+        .all([await api('/discover/movie'), await api('/genre/movie/list')])
+        .then(
+            axios.spread((data, categories) => {
+                // Get movies and categories
+                all_movies = data.data.results
+                genres_ = categories.data.genres
+
+                // Get name of category select
+                while (ctgy_name == undefined) {
+                    if (genres_[i].id == category_id) {
+                        ctgy_name = genres_[i].name
+                        break
+                    }
+                    i += 1
+                }
+                h2_title.innerHTML = `${ctgy_name}`
+                // Get movies with the category select
+                all_movies.forEach((category_movie) => {
+                    category_movie.genre_ids.forEach((id) => {
+                        if (id == category_id) {
+                            /* Get popularity,poster_path,release_date */
+                            const { popularity, poster_path, release_date } =
+                                category_movie
+
+                            /* Create elements */
+
+                            // Container
+                            const article_movie_ctgy = create_node('article')
+
+                            // Img
+                            const poster_img = create_node('img')
+
+                            // Rated
+                            const container_popularity = create_node('div')
+                            const star_rated = create_node('i')
+                            const rated = create_node('p')
+
+                            // Date
+                            const container_date = create_node('div')
+                            const date = create_node('p')
+
+                            /* classList */
+
+                            // Containers
+                            article_movie_ctgy.classList = 'container-article'
+
+                            // Img and lazyloading
+                            poster_img.classList = 'poster-movi'
+                            poster_img.loading = 'lazy'
+                            poster_img.src = img_size_3 + poster_path
+
+                            // Rated
+                            container_popularity.classList = 'grid-cols'
+                            star_rated.classList = 'fa-solid fa-star'
+
+                            // Date
+                            container_date.classList = 'date-movies'
+                            date.classList = 'date-text'
+
+                            // Appends
+                            rated.innerHTML = `${popularity}`
+                            container_popularity.append(star_rated, rated)
+
+                            date.innerHTML = `${release_date}`
+                            container_date.appendChild(date)
+
+                            article_movie_ctgy.append(
+                                poster_img,
+                                container_popularity,
+                                container_date
+                            )
+                            main_container_grid.appendChild(article_movie_ctgy)
+                        }
+                    })
+                })
+            })
+        )
+}
 
 /* Search function view */
 const search_view = () => {}
