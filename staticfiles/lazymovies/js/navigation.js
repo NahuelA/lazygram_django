@@ -7,6 +7,7 @@ import {
     search_btn,
     inp_search_mv,
     go_back_lazygram,
+    top_rated,
 } from './main.js'
 
 // Functions view
@@ -14,23 +15,36 @@ import {
     // Views to home
     get_trends_home,
     // Views to trends
-    get_home,
-    get_views,
-    categories_view,
+    categories_links,
     category_select_view,
+    search_movies,
 } from './views.js'
 
-const hashChange = () => {
+import {
+    get_views,
+    get_home,
+} from './utils.js'
+
+const hashChange = async () => {
     if (location.hash.startsWith('#trends')) {
         get_views('/trending/movie/day', 'Trends')
     } else if (location.hash.startsWith('#top_rated')) {
-        get_views('/movie/top_rated', 'Top rated')
+        get_views('/movie/popular', 'Top rated')
     } else if (location.hash.startsWith('#category=')) {
-        category_select_view(parseInt(location.hash.slice(10)))
-        categories_view()
-    } else if (location.hash.startsWith('#search='))
-        get_search_res_view(inp_search_mv.value)
-    else get_home_view()
+        category_select_view(parseInt(location.hash.split('=')[1]))
+        categories_links()
+    } else if (location.hash.startsWith('#search=')) {
+        search_movies(inp_search_mv.value)
+    } else {
+        await get_home_view()
+    }
+
+    // Scroll top after view loads
+    scroll({
+        top: 0,
+        behavior: 'smooth',
+    })
+
 }
 
 // Events Hash change in window-DOM
@@ -46,12 +60,17 @@ home_menu.addEventListener('click', () => {
 
 /* Sub categories hash*/
 
-/* Top rated hash*/
+/* Trends hash*/
 trends.addEventListener('click', () => {
     location.hash = '#trends'
 })
 
-/* Search has*/
+/* Top rated hash*/
+top_rated.addEventListener('click', () => {
+    location.hash = '#top_rated'
+})
+
+/* Search hash*/
 search_btn.addEventListener('click', () => {
     location.hash = `#search=${inp_search_mv.value}`
 })
@@ -71,15 +90,8 @@ const get_home_view = async () => {
     main.innerHTML = ''
     await get_trends_home()
     // Load categories
-    await categories_view()
+    await categories_links()
     await get_home('/movie/top_rated', 'Top rated', true)
     await get_home('/movie/popular', 'Most popular')
     await get_home('/movie/upcoming', 'Upcoming')
 }
-
-/* SEARCH VIEW*/
-const get_search_res_view = (mv) => {
-    console.log(mv)
-}
-
-/* Logout ... COMMING SOON */

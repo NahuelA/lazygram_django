@@ -1,12 +1,5 @@
 import { API_KEY } from './config.js'
-
-// IMG size
-export const img_size_3 = 'https://image.tmdb.org/t/p/w500/'
-
-// Query selector
-export const $ = (id) => {
-    return document.querySelector(id)
-}
+import { $ } from './utils.js'
 
 // Axios use
 export const api = axios.create({
@@ -19,15 +12,11 @@ export const api = axios.create({
     },
 })
 
-// Create elements
-export const create_node = (elemn) => {
-    return document.createElement(elemn)
-}
-
 /* Get elements from navigation */
 export const go_back_lazygram = $('#gb-lazygram')
 export const home_menu = $('#home-menu')
 /* Top rated */
+export const top_rated = $('#top-rated')
 export const trends = $('#trends')
 /* Search button */
 export const search_btn = $('#search-mv')
@@ -36,9 +25,10 @@ export const inp_search_mv = $('#inp-search-mv')
 export const title_window = $('#title-window')
 
 /* Containers for do not overload */
-
 export const main = $('#main')
+main.classList = 'col-sm-10'
 export const aside = $('#aside-bar')
 
 // Trends
 export const container_trends_main = $('#container-trends')
+
