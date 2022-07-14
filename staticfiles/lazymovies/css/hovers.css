@@ -1,20 +1,22 @@
-:root{
-
+:root {
     --violet-light: #c179ff;
     --text-light: #f8f9fa;
+    --hover-movies: rgba(33, 37, 41, 0.2);
 }
 
-.hover-1:hover{
-
+.hover-1:hover {
     background-color: var(--violet-light);
 }
 
-.hover-text-1:hover{
+.hover-opacity:hover {
+    cursor: pointer;
+    background-color: var(--hover-movies);
+}
 
+.hover-text-1:hover {
     color: var(--violet-light);
 }
 
-.text-light-1{
-
+.text-light-1 {
     color: var(--text-light);
 }
