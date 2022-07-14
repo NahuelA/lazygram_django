@@ -5,7 +5,9 @@ import {
     container_trends_main,
     main,
     aside,
+    aside_container,
     title_window,
+    relative_container,
 
     // Function create_elements
     api,
@@ -16,7 +18,9 @@ import {
     create_elements,
     $,
     img_size_3,
+    original_size,
     create_node,
+    get_home,
     main_container_grid,
     h2_title,
     section_movie,
@@ -45,20 +49,30 @@ export const get_trends_home = async () => {
     container_article_trends.classList = 'container-trendings-imgs'
 
     movies.forEach((src) => {
+        const { poster_path, id } = src
         // Img
         const poster_popular = create_node('img')
 
-        // class List
+        // classList
         poster_popular.classList = 'trendings-imgs'
-        poster_popular.src = img_size_3 + src.poster_path
-        poster_popular.loading = 'lazy'
+        poster_popular.src = img_size_3 + poster_path
 
-        // Container div
+        // Containers
+        const container_opacity_hover = create_node('div')
         const container_trends_ = create_node('div')
-        container_trends_.classList = 'container-categories-abs'
+
+        // classList
+        container_trends_.classList =
+            'position-relative-0x container-categories-abs'
+        container_opacity_hover.classList = 'position-absolutex hover-opacity'
+
+        // Add details
+        container_trends_.addEventListener('click', () => {
+            location.hash = `#movie=${id}`
+        })
 
         // Appends
-        container_trends_.appendChild(poster_popular)
+        container_trends_.append(container_opacity_hover, poster_popular)
         container_article_trends.appendChild(container_trends_)
         container_trends_main.appendChild(container_article_trends)
     })
@@ -127,8 +141,13 @@ export const category_select_view = async (category_id) => {
     let ctgy_name = undefined
     let i = 0
 
-    /* Active */
+    /* Deactive */
+    main.classList = 'col-sm-10'
     container_trends_main.classList.add('inactive')
+    aside_container.classList.remove('inactive')
+    relative_container.classList = 'position-relative row'
+    section_movie.innerHTML = ''
+    section_movie.classList = 'main-section'
 
     // Reset container
     main.innerHTML = ''
@@ -184,8 +203,9 @@ export const search_movies = async (query_movie) => {
         },
     })
 
-    /* Active */
+    /* Deactive */
     container_trends_main.classList.add('inactive')
+    aside_container.classList.remove('inactive')
 
     // Title and view construction
     const title_for_view = `Results to search ${query_movie}`
@@ -193,19 +213,115 @@ export const search_movies = async (query_movie) => {
 }
 
 // Movie details
-
 export const movie_details = async (movie_id) => {
-
-    const { data } = api(`movie/${movie_id}`)
+    const { data } = await api(`movie/${movie_id}`)
     console.log(data)
+
+    // Reset container
+    container_trends_main.classList.add('inactive')
+    container_trends_main.innerHTML = ''
+    main.innerHTML = ''
+    section_movie.innerHTML = ''
+
+    // Reset classList
+    main.classList = ''
+    relative_container.classList = 'position-relative'
+    aside_container.classList.add('inactive')
 
     // Create elements
 
+    // Principal img
     const container_detail_img = create_node('div')
     const detail_img = create_node('img')
+    detail_img.src = original_size + data.backdrop_path
 
     // Containers
+    const container_title_rate = create_node('div')
 
-    // Reset container
-    main.innerHTML = ''
+    // Rated
+    const container_popularity = create_node('div')
+    const container_grid_popularity = create_node('div')
+    const star_rated = create_node('i')
+    const rated = create_node('p')
+
+    // Title
+    const container_title = create_node('div')
+
+    // Description
+    const description_p = create_node('p')
+
+    // Categories
+    const container_category = create_node('div')
+
+    if (data.genres.length > 1) {
+        data.genres.forEach((category) => {
+            // Category
+            const category_btn = create_node('button')
+            category_btn.innerHTML = category.name
+            category_btn.id = category.id
+
+            // classList
+            category_btn.classList = `fs-6 btn btn-primary mrg-1 ctgy`
+            container_category.appendChild(category_btn)
+        })
+    } else {
+        // Category
+        const category_btn = create_node('button')
+        category_btn.innerHTML = data.genres.name
+        category_btn.id = data.genres.id
+
+        // classList
+        category_btn.classList = `fs-6 btn btn-primary mrg-1 ctgy`
+        container_category.appendChild(category_btn)
+    }
+
+    // classList
+
+    // Img
+    container_detail_img.classList = 'container-detail-img'
+    detail_img.classList = 'detail-img'
+
+    // Title and Rate
+    container_title_rate.classList = 'row mt-4'
+    container_title.classList = 'col-sm-8'
+
+    container_popularity.classList = 'col-sm'
+    container_grid_popularity.classList = 'grid-cols-details fs-4'
+    star_rated.classList = 'fa-solid fa-star'
+
+    // Description
+    description_p.classList = 'fs-5'
+
+    // Container
+    section_movie.classList = 'main-section-detail details'
+
+    // Appends
+
+    // Rated
+    rated.innerHTML = `${data.vote_average.toFixed(1)}`
+    container_grid_popularity.append(star_rated, rated)
+    container_popularity.appendChild(container_grid_popularity)
+
+    // Title
+    h2_title.innerHTML = `${data.title}`
+    container_title.append(h2_title, description_p)
+
+    // Description
+    description_p.innerHTML = `${data.overview}`
+
+    // Img
+    container_detail_img.appendChild(detail_img)
+
+    // Containers
+    container_title_rate.append(container_title, container_popularity)
+    section_movie.append(container_title_rate, container_category)
+    main.append(container_detail_img, section_movie)
+
+    // Select any category and go to movies and change hash
+    document.querySelectorAll('.ctgy').forEach((cat) => {
+        cat.addEventListener('click', () => {
+            location.hash = `#category=${cat.id}`
+        })
+    })
+    await get_home(`/movie/${movie_id}/recommendations`, 'Recommended','main-section-detail')
 }

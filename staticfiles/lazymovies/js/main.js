@@ -28,6 +28,8 @@ export const title_window = $('#title-window')
 export const main = $('#main')
 main.classList = 'col-sm-10'
 export const aside = $('#aside-bar')
+export const aside_container = $('#aside')
+export const relative_container = $('#relative-container')
 
 // Trends
 export const container_trends_main = $('#container-trends')

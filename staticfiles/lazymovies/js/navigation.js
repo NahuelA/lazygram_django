@@ -3,6 +3,8 @@ import {
     // Get elements from navigation menu
     home_menu,
     main,
+    aside_container,
+    relative_container,
     trends,
     search_btn,
     inp_search_mv,
@@ -18,12 +20,10 @@ import {
     categories_links,
     category_select_view,
     search_movies,
+    movie_details,
 } from './views.js'
 
-import {
-    get_views,
-    get_home,
-} from './utils.js'
+import { get_views, get_home } from './utils.js'
 
 const hashChange = async () => {
     if (location.hash.startsWith('#trends')) {
@@ -35,6 +35,8 @@ const hashChange = async () => {
         categories_links()
     } else if (location.hash.startsWith('#search=')) {
         search_movies(inp_search_mv.value)
+    } else if (location.hash.startsWith('#movie=')) {
+        movie_details(location.hash.split('=')[1])
     } else {
         await get_home_view()
     }
@@ -44,7 +46,6 @@ const hashChange = async () => {
         top: 0,
         behavior: 'smooth',
     })
-
 }
 
 // Events Hash change in window-DOM
@@ -88,10 +89,14 @@ go_back_lazygram.addEventListener('click', (e) => {
 /* HOME VIEW*/
 const get_home_view = async () => {
     main.innerHTML = ''
+    main.classList = 'col-sm-10'
+    aside_container.classList.remove('inactive')
+    relative_container.classList = 'position-relative row'
+
     await get_trends_home()
     // Load categories
     await categories_links()
-    await get_home('/movie/top_rated', 'Top rated', true)
+    await get_home('/movie/top_rated', 'Top rated', 'main-section',true)
     await get_home('/movie/popular', 'Most popular')
     await get_home('/movie/upcoming', 'Upcoming')
 }
